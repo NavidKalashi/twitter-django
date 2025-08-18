@@ -1,0 +1,33 @@
+name: twitter-django-project
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: twitter
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - user_data:/var/lib/postgresql/data
+
+  twitter:
+    image: twitter-image
+    container_name: twitter
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+    environment:
+      DB_NAME: twitter
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_HOST: postgres
+      DB_PORT: 5432
+
+volumes:
+  user_data:

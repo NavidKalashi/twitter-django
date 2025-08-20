@@ -9,21 +9,15 @@ from rest_framework.viewsets import ModelViewSet
 from .serializers import TweetSerializer, CustomUserSerializer, CustomUserDetailSerializer
 from .models import Tweet, CustomUser
 
-class TweetList(ListCreateAPIView):
+class TweetViewSet(ModelViewSet):
     queryset = Tweet.objects.all()
     serializer_class = TweetSerializer
 
     def get_serializer_context(self):
         return {'request': self.request}
-
-class TweetDetail(RetrieveUpdateDestroyAPIView):
-    queryset = Tweet.objects.all()
-    serializer_class = TweetSerializer
     
-    def delete(self, request, pk):
-        tweet = get_object_or_404(Tweet, pk=pk)
-        tweet.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 class CustomUserList(ListCreateAPIView):
     queryset = CustomUser.objects.all()

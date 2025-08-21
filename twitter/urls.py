@@ -1,8 +1,10 @@
-from django.urls import path
-from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
 from . import views
 
-router = DefaultRouter()
+router = routers.DefaultRouter()
 router.register('tweets', views.TweetViewSet)
 
-urlpatterns = router.urls
+tweet_router = routers.NestedDefaultRouter(router, 'tweets', lookup='tweet')
+tweet_router.register('comments', views.CommentViewSet, basename='tweet-comments')
+
+urlpatterns = router.urls + tweet_router.urls

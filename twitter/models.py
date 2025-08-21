@@ -27,3 +27,9 @@ class Tweet(models.Model):
     
     class Meta:
         ordering = ['created_at']
+
+class Comment(models.Model):
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    date = models.DateField(auto_now_add=True)

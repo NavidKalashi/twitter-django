@@ -7,7 +7,7 @@ class TweetSerializer(serializers.ModelSerializer):
         fields = ['uuid', 'author', 'text', 'created_at']
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField()
+    user_id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = CustomUser

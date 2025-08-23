@@ -4,16 +4,18 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from .serializers import TweetSerializer, CustomUserSerializer, CommentSerializer
 from .models import Tweet, CustomUser, Comment
 from .pagination import DefaultPagination
+from .permissions import IsAdminOrAuthenticated
 
 class TweetViewSet(ModelViewSet):
     queryset = Tweet.objects.all()
     serializer_class = TweetSerializer
     filter_backends = [SearchFilter, OrderingFilter]
     pagination_class = DefaultPagination
+    permission_classes = [IsAdminOrAuthenticated]
     search_fields = ['text']
     ordering_fields = ['created_at']
 
@@ -32,7 +34,7 @@ class CommentViewSet(ModelViewSet):
     def get_serializer_context(self):
         return {'tweet_id': self.kwargs['tweet_pk']}
     
-class CustomUserViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class CustomUserViewSet(ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [IsAuthenticated]
@@ -40,7 +42,7 @@ class CustomUserViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, 
     def get_permissions(self):
         if self.request.method == 'GET':
             return [AllowAny()]
-        return [IsAuthenticated()]
+        return [IsAdminUser()]
 
     @action(detail=False, methods=['GET', 'PUT'])
     def me(self, request):

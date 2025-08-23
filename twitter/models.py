@@ -1,19 +1,27 @@
 import uuid
 from django.db import models
+from django.conf import settings
+from django.contrib import admin
 
 class CustomUser(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
     bio = models.TextField()
     birthday = models.DateField(null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
-    def __str__(self) -> str:
-        return self.username
+    def __str__(self):
+        return self.user.username
+    
+    @admin.display(ordering='user__username')
+    def username(self):
+        return self.user.username
+
+    @admin.display(ordering='user__email')
+    def email(self):
+        return self.user.username
     
     class Meta:
-        ordering = ['username']
+        ordering = ['user__username']
 
 class Tweet(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

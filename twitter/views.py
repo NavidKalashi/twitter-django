@@ -22,18 +22,18 @@ class TweetViewSet(ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 
-class CustomUserList(ListCreateAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
+# class CustomUserList(ListCreateAPIView):
+#     queryset = CustomUser.objects.all()
+#     serializer_class = CustomUserSerializer
 
-    def get_serializer_context(self):
-        return {'request': self.request}
+#     def get_serializer_context(self):
+#         return {'request': self.request}
 
-class CustomUserDetail(APIView):
-    def get(self, request, pk):
-        customuser = get_object_or_404(CustomUser, pk=pk)
-        serializer = CustomUserDetailSerializer(customuser, context={'request': request})
-        return Response(serializer.data)
+# class CustomUserDetail(APIView):
+#     def get(self, request, pk):
+#         customuser = get_object_or_404(CustomUser, pk=pk)
+#         serializer = CustomUserDetailSerializer(customuser, context={'request': request})
+#         return Response(serializer.data)
     
 class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer

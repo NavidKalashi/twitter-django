@@ -22,5 +22,7 @@ admin.site.index_title = 'Admin'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('twitter/', include('twitter.urls'))
+    path('twitter/', include('twitter.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
 ]

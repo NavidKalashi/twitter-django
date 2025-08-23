@@ -1,10 +1,8 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.filters import SearchFilter, OrderingFilter
-from .serializers import TweetSerializer, CustomUserSerializer, CustomUserDetailSerializer, CommentSerializer
+from .serializers import TweetSerializer, CustomUserSerializer, CommentSerializer
 from .models import Tweet, CustomUser, Comment
 from .pagination import DefaultPagination
 
@@ -22,19 +20,6 @@ class TweetViewSet(ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 
-# class CustomUserList(ListCreateAPIView):
-#     queryset = CustomUser.objects.all()
-#     serializer_class = CustomUserSerializer
-
-#     def get_serializer_context(self):
-#         return {'request': self.request}
-
-# class CustomUserDetail(APIView):
-#     def get(self, request, pk):
-#         customuser = get_object_or_404(CustomUser, pk=pk)
-#         serializer = CustomUserDetailSerializer(customuser, context={'request': request})
-#         return Response(serializer.data)
-    
 class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer
 
@@ -43,3 +28,7 @@ class CommentViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {'tweet_id': self.kwargs['tweet_pk']}
+    
+class CustomUserViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer

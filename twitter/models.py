@@ -18,7 +18,7 @@ class CustomUser(models.Model):
 
     @admin.display(ordering='user__email')
     def email(self):
-        return self.user.username
+        return self.user.email
     
     class Meta:
         ordering = ['user__username']
